@@ -1,0 +1,92 @@
+import random
+from pygame import *
+from random import randint
+import numpy as np
+
+init()
+
+screen = display.set_mode((715, 600))
+display.set_caption("Petals around the roses")
+
+dice6 = image.load("/Users/hardiksingh/Documents/Screenshot 2024-01-24 at 20.53.04.png")
+dice6 = transform.scale(dice6, (100, 100))
+dice5 = image.load("/Users/hardiksingh/Documents/Screenshot 2024-01-24 at 20.52.58.png")
+dice5 = transform.scale(dice5, (100, 100))
+dice4 = image.load("/Users/hardiksingh/Documents/Screenshot 2024-01-24 at 20.52.50.png")
+dice4 = transform.scale(dice4, (100, 100))
+dice3 = image.load("/Users/hardiksingh/Documents/Screenshot 2024-01-24 at 20.52.40.png")
+dice3 = transform.scale(dice3, (100, 100))
+dice2 = image.load("/Users/hardiksingh/Documents/Screenshot 2024-01-24 at 20.52.34.png")
+dice2 = transform.scale(dice2, (100, 100))
+dice1 = image.load("/Users/hardiksingh/Documents/Screenshot 2024-01-24 at 20.52.21.png")
+dice1 = transform.scale(dice1, (100, 100))
+
+dice_images = {
+    1: dice1,
+    2: dice2,
+    3: dice3,
+    4: dice4,
+    5: dice5,
+    6: dice6
+}
+
+x, y = 0, 0
+
+class petalsGame:
+    def __init__(self, currentStreak, dice, correctTotal):
+        self.currentStreak: int = currentStreak
+        self.dice = []
+        self.correctTotal = correctTotal
+
+    def new(self, currentStreak):
+        currentStreak = 0
+
+    def randomiseDiceArr(self, dice_images, diceArrToUse=[]):
+        dice_items = list(dice_images.items())
+        random.shuffle(dice_items)
+        dice_images = dict(dice_items)
+        for key in dice_images:
+            diceArrToUse.append(key)
+        print(diceArrToUse)
+        for element in diceArrToUse:
+            if element == 3:
+                self.correctTotal = self.correctTotal + 2
+            if element == 5:
+                self.correctTotal = self.correctTotal + 4
+        return diceArrToUse, dice_images
+
+    def rollDice(self, dice_images):
+        pass
+
+    def checkAnswer(self, ans):
+        if ans == self.correctTotal:
+            self.currentStreak = self.currentStreak + 1
+            print(f"correct answer, current streak is: {self.currentStreak}")
+            return True
+        else:
+            print("incorrect")
+            self.currentStreak = 0
+            return False
+
+def drawDiceImage(arr):
+    x = 12
+    y = 50
+    for key, image in arr.items():
+        screen.blit(image, (x, y))
+        x += 117.9
+    display.update()
+
+endGame = False
+while not endGame:
+    for e in event.get():
+        if e.type == QUIT:
+            endGame = True
+    drawDiceImage(dice_images)
+    display.update()
+    game = petalsGame(currentStreak=0, dice=[], correctTotal=0)
+    dice_values, dice_images = game.randomiseDiceArr(dice_images, diceArrToUse=[])
+    #print(dice_values)
+    drawDiceImage(dice_images)
+    ans = int(input("Enter your answer: "))
+    if not game.checkAnswer(ans):
+        quit()
